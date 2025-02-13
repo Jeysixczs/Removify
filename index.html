@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Background Remover</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Background Remover</h1>
+    <div class="inputContainer">
+      <label>Upload an Image</label> <!-- No "for" attribute -->
+      <input type="file" id="imageInput" accept="image/*">
+    </div>
+    <div class="button-container">
+      <button class="btn" id="removeBackgroundBtn">Remove Background</button>
+      <button class="btn" id="newImageBtn">New</button>
+    </div>
+    <div id="resultContainer">
+      <img id="outputImage" src="" alt="Output Image">
+      <a id="downloadLink" href="#" download="no-background.png">Download Image</a>
+    </div>
+    <p>Created by <b>Jeysixczs</b></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
