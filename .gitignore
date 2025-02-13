@@ -1,3 +1,4 @@
 # Ignore the entire src directory
 
 src/
+script.js
