@@ -1,4 +1,4 @@
-const apiKey = "key-1NbTDiRZNnzhaz4i"; // Replace with your actual API key
+const apiKey = "API_KEY"; // Replace with your actual API key
 
 // Get all necessary elements
 const fileInput = document.getElementById('imageInput');
