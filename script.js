@@ -1,9 +1,5 @@
+ const apiKey = "key-1NbTDiRZNnzhaz4i";
 
-
-
-const apiKey = "key-1NbTDiRZNnzhaz4i"; // Replace with your actual API key     
-
-// Get all necessary elements
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
 const outputImage = document.getElementById('outputImage');
@@ -24,7 +20,7 @@ function resetApp() {
     // Reset the label text
     label.textContent = 'Upload an Image';
 
-    // Hide the result container and show the input container
+
     resultContainer.style.display = 'none';
     inputContainer.style.display = 'flex';
 
