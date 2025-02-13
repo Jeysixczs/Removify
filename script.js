@@ -1,5 +1,9 @@
-const apiKey = "API_KEY"; // Replace with your actual API key
+require('dotenv').config();
+//  const apiKey = process.env.API_KEY;
 
+
+const apiKey = "API_KEY"; // Replace with your actual API key     
+console.log(apiKey);
 // Get all necessary elements
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
