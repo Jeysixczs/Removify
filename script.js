@@ -1,5 +1,5 @@
- // const apiKey = "key-1NbTDiRZNnzhaz4i";
-const apiKey = "yxX2StZ9nf9do1Co9oLATjUP";
+const apiKey = "key-1NbTDiRZNnzhaz4i";
+// const apiKey = "yxX2StZ9nf9do1Co9oLATjUP";
 
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
