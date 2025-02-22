@@ -1,4 +1,4 @@
-const apiKey = "wyC17nxic2e7Qa598dawVNeK";
+const apiKey = "06cf5dce-dcab-4fc0-89f8-13370ae9a580";
 // const apiKey = "yxX2StZ9nf9do1Co9oLATjUP";
 
 const fileInput = document.getElementById('imageInput');
