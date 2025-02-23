@@ -1,5 +1,4 @@
-const apiKey = "key-2jviR6WQI8D3OKvJ";
-// const apiKey = "yxX2StZ9nf9do1Co9oLATjUP";
+const apiKey = "key-2jviR6WQI8D3OKvJ"; // Replace with your actual API key
 
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
@@ -9,9 +8,11 @@ const inputContainer = document.querySelector('.inputContainer');
 const label = inputContainer.querySelector('label');
 const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
 const newImageBtn = document.getElementById('newImageBtn');
+const loadingSpinner = document.getElementById('loadingSpinner'); // Add a loading spinner element in your HTML
 
-// Initially hide the "New" button
+// Initially hide the "New" button and loading spinner
 newImageBtn.style.display = 'none';
+loadingSpinner.style.display = 'none';
 
 // Function to reset the application to its initial state
 function resetApp() {
@@ -21,13 +22,14 @@ function resetApp() {
     // Reset the label text
     label.textContent = 'Upload an Image';
 
-
+    // Hide the result container and show the input container
     resultContainer.style.display = 'none';
     inputContainer.style.display = 'flex';
 
     // Clear the output image and download link
     outputImage.src = '';
     downloadLink.href = '#';
+    downloadLink.download = ''; // Clear the download attribute
 
     // Show "Remove Background" button and hide "New" button
     removeBackgroundBtn.style.display = 'block';
@@ -56,6 +58,10 @@ removeBackgroundBtn.addEventListener('click', async () => {
         const imageBase64 = event.target.result.split(',')[1]; // Get base64 data
 
         try {
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+            removeBackgroundBtn.disabled = true; // Disable the button during processing
+
             const response = await fetch("https://api.withoutbg.com/v1.0/image-without-background-base64", {
                 method: "POST",
                 headers: {
@@ -75,6 +81,7 @@ removeBackgroundBtn.addEventListener('click', async () => {
             // Display the result image
             outputImage.src = `data:image/png;base64,${resultImage}`;
             downloadLink.href = `data:image/png;base64,${resultImage}`;
+            downloadLink.download = 'background_removed.png'; // Set the download filename
 
             // Hide the input container and show the result container
             inputContainer.style.display = 'none';
@@ -86,6 +93,10 @@ removeBackgroundBtn.addEventListener('click', async () => {
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while removing the background.');
+        } finally {
+            // Hide loading spinner and re-enable the button
+            loadingSpinner.style.display = 'none';
+            removeBackgroundBtn.disabled = false;
         }
     };
 
@@ -99,7 +110,5 @@ newImageBtn.addEventListener('click', () => {
 
 // Trigger file input when the inputContainer is clicked
 inputContainer.addEventListener('click', () => {
-    if (!fileInput.files || fileInput.files.length === 0) {
-        fileInput.click(); // Only trigger file input if no file is selected
-    }
+    fileInput.click(); // Always trigger file input when the container is clicked
 });
