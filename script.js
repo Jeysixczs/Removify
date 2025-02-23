@@ -1,6 +1,6 @@
  
  const apiKey = "key-2jviR6WQI8D3OKvJ";
- //yxX2StZ9nf9do1Co9oLATjUP
+ //change your api key this api is only 50 attemps
  
 
 const fileInput = document.getElementById('imageInput');
