@@ -4,4 +4,3 @@ Effortlessly transform your photos with our Background Remover!  Upload your ima
 ## Click this Like to View Website
 ### https://jeysixczs.github.io/Removify/
 
-i use api of https://withoutbg.com/
