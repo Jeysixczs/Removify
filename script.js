@@ -1,4 +1,4 @@
-const apiKey = "wyC17nxic2e7Qa598dawVNeK";
+const apiKey = "key-2jviR6WQI8D3OKvJ";
 // const apiKey = "yxX2StZ9nf9do1Co9oLATjUP";
 
 const fileInput = document.getElementById('imageInput');
@@ -21,14 +21,13 @@ function resetApp() {
     // Reset the label text
     label.textContent = 'Upload an Image';
 
-    // Hide the result container and show the input container
+
     resultContainer.style.display = 'none';
     inputContainer.style.display = 'flex';
 
     // Clear the output image and download link
     outputImage.src = '';
     downloadLink.href = '#';
-    downloadLink.download = ''; // Clear the download attribute
 
     // Show "Remove Background" button and hide "New" button
     removeBackgroundBtn.style.display = 'block';
@@ -76,7 +75,6 @@ removeBackgroundBtn.addEventListener('click', async () => {
             // Display the result image
             outputImage.src = `data:image/png;base64,${resultImage}`;
             downloadLink.href = `data:image/png;base64,${resultImage}`;
-            downloadLink.download = 'background_removed.png'; // Set the download filename
 
             // Hide the input container and show the result container
             inputContainer.style.display = 'none';
@@ -101,5 +99,7 @@ newImageBtn.addEventListener('click', () => {
 
 // Trigger file input when the inputContainer is clicked
 inputContainer.addEventListener('click', () => {
-    fileInput.click(); // Always trigger file input when the container is clicked
+    if (!fileInput.files || fileInput.files.length === 0) {
+        fileInput.click(); // Only trigger file input if no file is selected
+    }
 });
