@@ -1,7 +1,7 @@
  
  const apiKey = "key-FNwTdCngxQZXXLiR";
  //change your api key this api is only 50 attemps
- 
+ // use https://withoutbg.com/ to get your own api key
 
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
