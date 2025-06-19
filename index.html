@@ -1,28 +1,93 @@
-o<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Removify</title>
+  <title>Removify - AI Background Remover</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
+  <div class="theme-toggle">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </div>
+
   <div class="container">
-    <h1>Background Remover</h1>
+    <div class="header">
+      <h1><span class="gradient-text">Removify</span> <span>AI Background Remover</span></h1>
+      <p class="subtitle">Upload an image to instantly remove the background with AI</p>
+    </div>
+
     <div class="inputContainer">
-      <label>Upload an Image</label> <!-- No "for" attribute -->
-      <input type="file" id="imageInput" accept="image/*">
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-content">
+          <i class="fas fa-cloud-upload-alt upload-icon"></i>
+          <label id="uploadLabel">Drag & drop your image here</label>
+          <small>or click to browse files (JPG, PNG up to 5MB)</small>
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+      </div>
     </div>
+
     <div class="button-container">
-      <button class="btn" id="removeBackgroundBtn">Remove Background</button>
-      <button class="btn" id="newImageBtn">New</button>
+      <button class="btn primary" id="removeBackgroundBtn">
+        <i class="fas fa-magic"></i> Remove Background
+      </button>
+      <button class="btn secondary" id="newImageBtn">
+        <i class="fas fa-redo"></i> Start Over
+      </button>
     </div>
+
     <div id="resultContainer">
-      <img id="outputImage" src="" alt="Output Image">
-      <a id="downloadLink" href="#" download="no-background.png">Download Image</a>
+      <div class="result-header">
+        <h2>Background Removed!</h2>
+        <p>Your image is ready to download</p>
+      </div>
+      <div class="result-wrapper">
+        <img id="outputImage" src="" alt="Output Image">
+      </div>
+      <a id="downloadLink" href="#" download="no-background.png">
+        <i class="fas fa-download"></i> Download Image
+      </a>
     </div>
-    <p>Created by <b>Jeysixczs</b></p>
+
+    <div class="loading-container" id="loadingContainer">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p>AI is working its magic...</p>
+      <small>This may take a few seconds</small>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <i class="fas fa-bolt"></i>
+        <h3>Instant Processing</h3>
+        <p>Get results in seconds with our powerful AI</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-lock"></i>
+        <h3>Privacy Focused</h3>
+        <p>Your images are never stored on our servers</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-image"></i>
+        <h3>High Quality</h3>
+        <p>Clean results with transparent background</p>
+      </div>
+    </div>
+
+    <p class="footer">Created by <b>Jeysixczs</b> | Powered by withoutbg.com API</p>
   </div>
   <script src="script.js"></script>
 </body>
+
 </html>

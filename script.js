@@ -1,107 +1,201 @@
- 
- const apiKey = "key-FNwTdCngxQZXXLiR";
- //change your api key this api is only 50 attemps
- // use https://withoutbg.com/ to get your own api key
-
+// DOM Elements
 const fileInput = document.getElementById('imageInput');
 const resultContainer = document.getElementById('resultContainer');
 const outputImage = document.getElementById('outputImage');
 const downloadLink = document.getElementById('downloadLink');
-const inputContainer = document.querySelector('.inputContainer');
-const label = inputContainer.querySelector('label');
+const uploadArea = document.getElementById('uploadArea');
+const uploadLabel = document.getElementById('uploadLabel');
 const removeBackgroundBtn = document.getElementById('removeBackgroundBtn');
 const newImageBtn = document.getElementById('newImageBtn');
+const loadingContainer = document.getElementById('loadingContainer');
+const themeToggle = document.querySelector('.theme-toggle');
+const themeIcon = document.getElementById('themeIcon');
 
-// Initially hide the "New" button
-newImageBtn.style.display = 'none';
+// API Configuration
+const apiKey = "key-FNwTdCngxQZXXLiR"; // Replace with your own API key
 
-// Function to reset the application to its initial state
-function resetApp() {
-    // Reset file input
-    fileInput.value = ''; // Clear the file input
+// Initialize theme
+let darkMode = localStorage.getItem('darkMode') === 'true';
+updateTheme();
 
-    // Reset the label text
-    label.textContent = 'Upload an Image';
+// Theme toggle event
+themeToggle.addEventListener('click', () => {
+    darkMode = !darkMode;
+    localStorage.setItem('darkMode', darkMode);
+    updateTheme();
+});
 
-
-    resultContainer.style.display = 'none';
-    inputContainer.style.display = 'flex';
-
-    // Clear the output image and download link
-    outputImage.src = '';
-    downloadLink.href = '#';
-
-    // Show "Remove Background" button and hide "New" button
-    removeBackgroundBtn.style.display = 'block';
-    newImageBtn.style.display = 'none';
+function updateTheme() {
+    if (darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        themeToggle.style.background = 'linear-gradient(135deg, #3a3a3a, #2a2a2a)';
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        themeToggle.style.background = 'linear-gradient(135deg, #f5f7fa, #e4e8f5)';
+    }
 }
 
-// Event listener for file input change
-fileInput.addEventListener('change', (event) => {
-    if (fileInput.files && fileInput.files.length > 0) {
-        // Change the text to the uploaded file name
-        label.textContent = fileInput.files[0].name;
+// Drag and drop functionality
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight() {
+    uploadArea.classList.add('drag-over');
+    uploadArea.style.transform = 'scale(1.02)';
+}
+
+function unhighlight() {
+    uploadArea.classList.remove('drag-over');
+    uploadArea.style.transform = 'scale(1)';
+}
+
+uploadArea.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length) {
+        handleFiles(files);
+    }
+}
+
+// File input change handler
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) {
+        handleFiles(fileInput.files);
     }
 });
 
-// Event listener for the "Remove Background" button
+function handleFiles(files) {
+    fileInput.files = files;
+    updateFileName();
+}
+
+function updateFileName() {
+    if (fileInput.files && fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name;
+        uploadLabel.textContent = fileName.length > 20
+            ? fileName.substring(0, 17) + '...'
+            : fileName;
+        uploadArea.classList.add('file-selected');
+    }
+}
+
+uploadArea.addEventListener('click', () => {
+    fileInput.click();
+});
+// At the top of your script.js
+
+uploadLabel.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+// Reset application state
+function resetApp() {
+    fileInput.value = '';
+    uploadLabel.textContent = 'Drag & drop your image here';
+    uploadArea.querySelector('small').textContent = 'or click to browse files (JPG, PNG up to 5MB)';
+    resultContainer.style.display = 'none';
+    removeBackgroundBtn.style.display = 'flex';
+    newImageBtn.style.display = 'none';
+    uploadArea.classList.remove('file-selected');
+}
+
+// Remove background function
 removeBackgroundBtn.addEventListener('click', async () => {
     if (!fileInput.files || fileInput.files.length === 0) {
-        alert('Please select an image first.');
+        showAlert('Please select an image first.');
         return;
     }
 
     const file = fileInput.files[0];
-    const reader = new FileReader();
 
-    reader.onload = async (event) => {
-        const imageBase64 = event.target.result.split(',')[1]; // Get base64 data
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showAlert('Image size should be less than 5MB.');
+        return;
+    }
 
-        try {
-            const response = await fetch("https://api.withoutbg.com/v1.0/image-without-background-base64", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-API-Key": apiKey,
-                },
-                body: JSON.stringify({ image_base64: imageBase64 }),
-            });
+    // Check file type
+    if (!file.type.match('image.*')) {
+        showAlert('Please select a valid image file (JPG, PNG).');
+        return;
+    }
 
-            if (!response.ok) {
-                throw new Error('Failed to remove background');
-            }
+    loadingContainer.style.display = 'flex';
+    removeBackgroundBtn.disabled = true;
 
-            const data = await response.json();
-            const resultImage = data.img_without_background_base64;
-
-            // Display the result image
-            outputImage.src = `data:image/png;base64,${resultImage}`;
-            downloadLink.href = `data:image/png;base64,${resultImage}`;
-
-            // Hide the input container and show the result container
-            inputContainer.style.display = 'none';
-            resultContainer.style.display = 'block';
-
-            // Hide "Remove Background" button and show "New" button
-            removeBackgroundBtn.style.display = 'none';
-            newImageBtn.style.display = 'block';
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while removing the background.');
-        }
-    };
-
-    reader.readAsDataURL(file); // Convert the image to base64
-});
-
-// Event listener for the "New" button
-newImageBtn.addEventListener('click', () => {
-    resetApp();
-});
-
-// Trigger file input when the inputContainer is clicked
-inputContainer.addEventListener('click', () => {
-    if (!fileInput.files || fileInput.files.length === 0) {
-        fileInput.click(); // Only trigger file input if no file is selected
+    try {
+        const result = await removeBackground(file);
+        outputImage.src = result;
+        downloadLink.href = result;
+        resultContainer.style.display = 'block';
+        removeBackgroundBtn.style.display = 'none';
+        newImageBtn.style.display = 'flex';
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('An error occurred while removing the background. Please try again.');
+    } finally {
+        loadingContainer.style.display = 'none';
+        removeBackgroundBtn.disabled = false;
     }
 });
+
+async function removeBackground(file) {
+    const imageBase64 = await readFileAsBase64(file);
+
+    const response = await fetch("https://api.withoutbg.com/v1.0/image-without-background-base64", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": apiKey,
+        },
+        body: JSON.stringify({ image_base64: imageBase64 }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return `data:image/png;base64,${data.img_without_background_base64}`;
+}
+
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+// New image button handler
+newImageBtn.addEventListener('click', resetApp);
+
+// Helper function to show alerts
+function showAlert(message) {
+    // In a production app, consider using a toast notification
+    alert(message);
+}
+
+// Initialize app state
+resetApp();
